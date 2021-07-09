@@ -4,5 +4,6 @@
 
 ### Resize to (640, 360)
 ```console
-$ gst-launch-1.0 nvarguscamerasrc sensor_id=0 ! 'video/x-raw(memory:NVMM),width=3264, height=2464, framerate=21/1, format=NV12' ! nvvidconv flip-method=0 ! 'video/x-raw, width=640, height=360' !    nvvidconv ! nvegltransform ! nveglglessink -e
+$ gst-launch-1.0 nvarguscamerasrc sensor_id=0 ! 'video/x-raw(memory:NVMM),width=3264, height=2464, framerate=21/1, format=NV12' ! \
+nvvidconv flip-method=0 ! 'video/x-raw, width=640, height=360' !    nvvidconv ! nvegltransform ! nveglglessink -e
 ```
