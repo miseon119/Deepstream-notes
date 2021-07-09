@@ -14,3 +14,5 @@ $ gst-launch-1.0 nvarguscamerasrc sensor-id=0 ! "video/x-raw(memory:NVMM), width
 tee name=t ! queue ! videorate !  nvv4l2h264enc ! h264parse ! qtmux ! filesink location=out.mp4 t. ! queue ! \
 nvoverlaysink sync=0 overlay-x=640 overlay-y=0 overlay-w=1280 overlay-h=720 -e
 ```
+
+[Reference](https://developer.ridgerun.com/wiki/index.php?title=Gstreamer_pipelines_for_Jetson_TX2)
