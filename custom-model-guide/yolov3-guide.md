@@ -71,4 +71,4 @@ Optional properties for detectors:
 
 `parse-bbox-func-name`
 
-[more properties](./custom-model-guide/nvinfer-properties-guide.md)
+[more properties](https://github.com/miseon119/Deepstream-notes/blob/main/custom-model-guide/nvinfer-properties-guide.md#mandatory-properties-for-classifiers)
