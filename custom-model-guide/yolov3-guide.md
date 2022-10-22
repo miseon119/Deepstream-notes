@@ -70,3 +70,5 @@ Optional properties for detectors:
 `custom-lib-path`
 
 `parse-bbox-func-name`
+
+[more properties]()
