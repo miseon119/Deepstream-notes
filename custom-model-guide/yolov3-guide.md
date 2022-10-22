@@ -126,3 +126,36 @@ bool NvDsInferYoloCudaEngineGet(nvinfer1::IBuilder * const builder,
 #endif
 ```
 
+## Set parse-bbox-func-name
+
+```
+parse-bbox-func-name=NvDsInferParseCustomYoloV3
+```
+
+```cpp
+extern "C" bool NvDsInferParseCustomYoloV3(
+    std::vector<NvDsInferLayerInfo> const& outputLayersInfo,
+    NvDsInferNetworkInfo const& networkInfo,
+    NvDsInferParseDetectionParams const& detectionParams,
+    std::vector<NvDsInferParseObjectInfo>& objectList);
+
+/* C-linkage to prevent name-mangling */
+extern "C" bool NvDsInferParseCustomYoloV3(
+    std::vector<NvDsInferLayerInfo> const& outputLayersInfo,
+    NvDsInferNetworkInfo const& networkInfo,
+    NvDsInferParseDetectionParams const& detectionParams,
+    std::vector<NvDsInferParseObjectInfo>& objectList)
+{
+    static const std::vector<float> kANCHORS = {
+        10.0, 13.0, 16.0,  30.0,  33.0, 23.0,  30.0,  61.0,  62.0,
+        45.0, 59.0, 119.0, 116.0, 90.0, 156.0, 198.0, 373.0, 326.0};
+    static const std::vector<std::vector<int>> kMASKS = {
+        {6, 7, 8},
+        {3, 4, 5},
+        {0, 1, 2}};
+    return NvDsInferParseYoloV3 (
+        outputLayersInfo, networkInfo, detectionParams, objectList,
+        kANCHORS, kMASKS);
+}
+
+```
