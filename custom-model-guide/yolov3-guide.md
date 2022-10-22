@@ -72,3 +72,57 @@ Optional properties for detectors:
 `parse-bbox-func-name`
 
 [more properties](https://github.com/miseon119/Deepstream-notes/blob/main/custom-model-guide/nvinfer-properties-guide.md#mandatory-properties-for-classifiers)
+
+## Set Engine Create Function Name
+```
+parse-bbox-func-name=NvDsInferParseCustomYoloV3
+custom-lib-path=nvdsinfer_custom_impl_Yolo/libnvdsinfer_custom_impl_Yolo.so
+engine-create-func-name=NvDsInferYoloCudaEngineGet
+```
+
+First, Write `NvDsInferYoloCudaEngineGet` function:
+```cpp
+#if !USE_CUDA_ENGINE_GET_API
+IModelParser* NvDsInferCreateModelParser(
+    const NvDsInferContextInitParams* initParams) {
+    NetworkInfo networkInfo;
+    if (!getYoloNetworkInfo(networkInfo, initParams)) {
+      return nullptr;
+    }
+
+    return new Yolo(networkInfo);
+}
+#else
+extern "C"
+bool NvDsInferYoloCudaEngineGet(nvinfer1::IBuilder * const builder,
+        nvinfer1::IBuilderConfig * const builderConfig,
+        const NvDsInferContextInitParams * const initParams,
+        nvinfer1::DataType dataType,
+        nvinfer1::ICudaEngine *& cudaEngine);
+
+extern "C"
+bool NvDsInferYoloCudaEngineGet(nvinfer1::IBuilder * const builder,
+        nvinfer1::IBuilderConfig * const builderConfig,
+        const NvDsInferContextInitParams * const initParams,
+        nvinfer1::DataType dataType,
+        nvinfer1::ICudaEngine *& cudaEngine)
+{
+    NetworkInfo networkInfo;
+    if (!getYoloNetworkInfo(networkInfo, initParams)) {
+      return false;
+    }
+
+    Yolo yolo(networkInfo);
+    cudaEngine = yolo.createEngine (builder, builderConfig);
+    if (cudaEngine == nullptr)
+    {
+        std::cerr << "Failed to build cuda engine on "
+                  << networkInfo.configFilePath << std::endl;
+        return false;
+    }
+
+    return true;
+}
+#endif
+```
+
